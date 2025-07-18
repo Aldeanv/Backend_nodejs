@@ -19,8 +19,8 @@ model User {
   email     String    @unique
   password  String
   role      String    @default("user")
-  NIK       String?   // Nullable
-  phone     String?   // Nullable
+  NIK       String?   @unique // Nullable (untuk admin)
+  phone     String?   // Nullable (untuk admin)
   createdAt DateTime  @default(now())
   wishlists Catalog[] @relation("UserWishlist")
 }
