@@ -46,4 +46,17 @@ const catalogSchema = z.object({
   coverUrl: z.string().url("Cover URL must be a valid URL"),
 });
 
-module.exports = { catalogSchema };
+const searchCatalogSchema = z.object({
+  keyword: z.string().optional(),
+  genre: z.string().optional(),
+  type: z.string().optional(),
+  year: z.coerce.number().optional(),
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(10),
+  sortBy: z
+    .enum(["title", "author", "genre", "type", "year", "createdAt"])
+    .default("createdAt"),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
+module.exports = { catalogSchema, searchCatalogSchema };
