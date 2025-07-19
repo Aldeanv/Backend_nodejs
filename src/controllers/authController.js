@@ -104,7 +104,11 @@ exports.login = async (req, res) => {
   try {
     const data = loginSchema.parse(req.body);
 
-    const user = await prisma.user.findUnique({ where: { email: data.email } });
+    const user = await prisma.user.findUnique({
+      where: { email: data.email },
+      include: { wishlists: true },
+    });
+
     if (!user) return res.status(400).json({ message: "User tidak ditemukan" });
 
     const match = await bcrypt.compare(data.password, user.password);
@@ -114,7 +118,19 @@ exports.login = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.json({ message: "Login berhasil", token });
+    res.json({
+      message: "Login berhasil",
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        NIK: user.NIK,
+        phone: user.phone,
+        wishlists: user.wishlists,
+      },
+    });
   } catch (error) {
     if (error.name === "ZodError" && Array.isArray(error.errors)) {
       return res.status(400).json({
