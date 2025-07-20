@@ -29,7 +29,10 @@ const catalogSchema = z.object({
     "Sosial",
     "Kesehatan",
   ]),
-  year: z.number().int().min(1000).max(new Date().getFullYear()),
+  year: z.preprocess(
+    (val) => Number(val),
+    z.number().int().min(1000).max(new Date().getFullYear())
+  ),
   type: z.enum([
     "Cetak",
     "Ebook",
@@ -43,7 +46,6 @@ const catalogSchema = z.object({
   ]),
   publisher: z.string().min(1, "Publisher is required"),
   synopsis: z.string().min(1, "Synopsis is required"),
-  coverUrl: z.string().url("Cover URL must be a valid URL"),
 });
 
 const searchCatalogSchema = z.object({

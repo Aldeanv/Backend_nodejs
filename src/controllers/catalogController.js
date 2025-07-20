@@ -16,9 +16,19 @@ exports.createCatalog = async (req, res) => {
       .json({ message: "Hanya admin yang dapat menambahkan katalog" });
   }
 
+  if (!req.file) {
+    return res.status(400).json({ message: "Masukan gambar sampul" });
+  }
+
   try {
     const data = catalogSchema.parse(req.body);
-    const catalog = await prisma.catalog.create({ data });
+
+    const catalog = await prisma.catalog.create({
+      data: {
+        ...data,
+        coverUrl: `/uploads/${req.file.filename}`,
+      },
+    });
 
     res.status(201).json({ message: "Catalog berhasil ditambahkan", catalog });
   } catch (error) {
