@@ -112,7 +112,7 @@ exports.login = async (req, res) => {
     if (!user) return res.status(400).json({ message: "User tidak ditemukan" });
 
     const match = await bcrypt.compare(data.password, user.password);
-    if (!match) return res.status(401).json({ message: "Password salah" });
+    if (!match) return res.status(401).json({ message: "Login gagal" });
 
     const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, {
       expiresIn: "7d",
