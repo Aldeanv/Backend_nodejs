@@ -3,6 +3,7 @@
 **Aksaraya Backend** adalah REST API untuk aplikasi **Aksaraya**, sebuah web katalog buku yang memungkinkan pengguna untuk:
 
 - Menelusuri koleksi buku yang tersedia.
+- Menambahkan buku kedalam wishlist.
 - Melihat detail buku seperti:
   - **Judul Buku**
   - **Sinopsis**
