@@ -13,7 +13,7 @@ router.get("/:id", catalogController.getCatalogById);
 
 // Admin routes
 router.post("/", adminMiddleware, upload.single('cover'), catalogController.createCatalog);
-router.put("/:id", adminMiddleware, catalogController.updateCatalog);
+router.put("/:id", adminMiddleware, upload.single("cover"), catalogController.updateCatalog);
 router.delete("/:id", adminMiddleware, catalogController.deleteCatalog);
 
 module.exports = router;

@@ -89,10 +89,28 @@ exports.updateCatalog = async (req, res) => {
   }
 
   try {
-    const data = catalogSchema.parse(req.body);
+    const { title, author, genre, year, type, publisher, synopsis } = req.body;
+    const data = catalogSchema.parse({
+      title,
+      author,
+      genre,
+      year,
+      type,
+      publisher,
+      synopsis,
+    });
+
+    const updateData = {
+      ...data,
+    };
+
+    if (req.file) {
+      updateData.coverUrl = `/uploads/${req.file.filename}`;
+    }
+
     const catalog = await prisma.catalog.update({
       where: { id: Number(req.params.id) },
-      data,
+      data: updateData,
     });
 
     res.json({ message: "Catalog berhasil diperbarui", catalog });
@@ -102,6 +120,7 @@ exports.updateCatalog = async (req, res) => {
         .status(400)
         .json({ message: "Validasi gagal", errors: error.errors });
     }
+    console.error(error);
     res
       .status(500)
       .json({ message: "Gagal memperbarui catalog", error: error.message });
