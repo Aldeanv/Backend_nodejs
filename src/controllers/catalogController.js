@@ -199,3 +199,33 @@ exports.searchCatalogs = async (req, res) => {
       .json({ message: "Terjadi kesalahan", error: error.message });
   }
 };
+
+// recomendations
+exports.getRecommendations = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const currentCatalog = await prisma.catalog.findUnique({
+      where: { id: parseInt(id) }
+    });
+
+    if (!currentCatalog) {
+      return res.status(404).json({ message: "Catalog tidak ditemukan" });
+    }
+
+    const recommendations = await prisma.catalog.findMany({
+      where: {
+        id: { not: currentCatalog.id },
+        OR: [
+          { genre: currentCatalog.genre },
+          { author: currentCatalog.author },
+          { title: { contains: currentCatalog.title.split(' ')[0], mode: 'insensitive' } }
+        ]
+      },
+      take: 5
+    });
+
+    res.json(recommendations);
+  } catch (err) {
+    res.status(500).json({ message: "Gagal mengambil rekomendasi", error: err.message });
+  }
+};

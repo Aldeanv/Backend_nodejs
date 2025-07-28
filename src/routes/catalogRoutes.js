@@ -10,6 +10,7 @@ router.get("/search", catalogController.searchCatalogs);
 // Public routes
 router.get("/", catalogController.getAllCatalogs);
 router.get("/:id", catalogController.getCatalogById);
+router.get("/:id/recommendations", catalogController.getRecommendations);
 
 // Admin routes
 router.post("/", adminMiddleware, upload.single('cover'), catalogController.createCatalog);
